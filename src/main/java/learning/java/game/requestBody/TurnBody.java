@@ -1,4 +1,4 @@
-package learning.java.game;
+package learning.java.game.requestBody;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
