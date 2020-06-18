@@ -1,12 +1,52 @@
-package learning.java.game.gameModel.controller;
+package learning.java.game.game_model.controller;
 
-import learning.java.game.gameModel.model.Field;
-import learning.java.game.gameModel.model.Figure;
-import learning.java.game.gameModel.model.Point;
+import learning.java.game.game_model.model.Field;
+import learning.java.game.game_model.model.Figure;
+import learning.java.game.game_model.model.Game;
+import learning.java.game.game_model.model.Point;
 import org.springframework.stereotype.Component;
 
+import java.util.Random;
+
 @Component
-public class WinnerController {
+public class GameControllerSingle implements GameController {
+
+    public void letsPlay(Game game, Point point) {
+        Field field = game.getField();
+
+        if (game.getPlayers().get(0).getFigure() == Figure.X) {
+            applyFigure(field, point, currentFigure(field));
+            randomMove(field);
+            game.setWinner(checkLineWinner(field));
+            return;
+        }
+        randomMove(field);
+        applyFigure(field, point, currentFigure(field));
+        game.setWinner(checkLineWinner(field));
+    }
+
+    private void randomMove(Field field) {
+        Random random = new Random();
+        Figure figure = currentFigure(field);
+        int size = field.getSize();
+        while (!(applyFigure(field, new Point(random.nextInt(size), random.nextInt(3)), figure))) ;
+
+
+    }
+
+    private boolean applyFigure(final Field field, final Point point, final Figure figure) {
+        if (field.getFigure(point) != null)
+            return false;
+        field.setFigures(point, figure);
+        return true;
+    }
+
+
+    public Figure currentFigure(final Field field) {
+        if (field.getCounterFigure() % 2 == 1) return Figure.O;
+        return Figure.X;
+    }
+
     private  final Figure X = Figure.X;
     private final Figure O = Figure.O;
 
@@ -80,5 +120,5 @@ public class WinnerController {
         return null;
     }
 
-}
 
+}

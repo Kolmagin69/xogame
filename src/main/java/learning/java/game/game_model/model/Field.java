@@ -1,4 +1,4 @@
-package learning.java.game.gameModel.model;
+package learning.java.game.game_model.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -7,7 +7,8 @@ public class Field {
 
     private int size;
 
-    @JsonIgnore private int counterFigure = 0;
+    @JsonIgnore
+    private int counterFigure = 0;
 
     private final Figure[][] figures;
 
@@ -35,7 +36,7 @@ public class Field {
         return figures;
     }
 
-    public int getCounterFigure(){
+    public int getCounterFigure() {
         return counterFigure;
     }
 

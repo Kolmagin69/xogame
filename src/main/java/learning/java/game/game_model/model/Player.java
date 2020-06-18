@@ -1,16 +1,16 @@
-package learning.java.game.gameModel.model;
+package learning.java.game.game_model.model;
 
 import java.util.UUID;
 
-public class PlayerSingle implements Player {
-    
+public class Player {
+
     private final UUID id = UUID.randomUUID();
 
     private final String name;
 
     private final Figure figure;
 
-    public PlayerSingle(String name, Figure figure) {
+    public Player(String name, Figure figure) {
         this.name = name;
         this.figure = figure;
     }
@@ -23,7 +23,7 @@ public class PlayerSingle implements Player {
         return figure;
     }
 
-    public UUID getId (){
+    public UUID getId() {
         return id;
     }
 }

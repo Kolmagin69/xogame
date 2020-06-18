@@ -1,8 +1,7 @@
-package learning.java.game.requestBody;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+package learning.java.game.rest_controller.request_body;
 
 public class TurnBody {
+
     private int[] position;
 
     public int[] getPosition() {
@@ -16,8 +15,6 @@ public class TurnBody {
     public int getX() {
         return position[0];
     }
-
-
 
     public int getY() {
         return position[1];

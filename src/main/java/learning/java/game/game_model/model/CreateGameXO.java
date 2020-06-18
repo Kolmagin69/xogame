@@ -1,4 +1,4 @@
-package learning.java.game.gameModel.model;
+package learning.java.game.game_model.model;
 
 import org.springframework.stereotype.Component;
 
@@ -16,16 +16,16 @@ public class CreateGameXO implements CreateGame {
         return new Game(type, name, createPlayer(figure), new Field(3));
     }
 
-    private List<Player> createPlayer (Figure figure) {
+    private List<Player> createPlayer(Figure figure) {
         List players = new ArrayList();
         if (figure == Figure.X) {
-            players.add(new PlayerSingle("player", figure));
-            players.add(new PlayerSingle("AI", Figure.O));
+            players.add(new Player("player", figure));
+            players.add(new Player("AI", Figure.O));
             return players;
         }
 
-        players.add(new PlayerSingle("player", figure));
-        players.add(new PlayerSingle("AI", Figure.X));
+        players.add(new Player("player", figure));
+        players.add(new Player("AI", Figure.X));
         return players;
 
     }

@@ -1,11 +1,11 @@
-package learning.java.game.gameModel.model;
+package learning.java.game.game_model.model;
 
 
 public class Point {
 
-   private final int x;
+    private final int x;
 
-   private final int y;
+    private final int y;
 
 
     public Point(int x, int y) {

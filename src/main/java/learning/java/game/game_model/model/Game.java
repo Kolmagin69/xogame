@@ -1,6 +1,4 @@
-package learning.java.game.gameModel.model;
-
-import com.google.gson.Gson;
+package learning.java.game.game_model.model;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +11,7 @@ public class Game {
 
     private final String name;
 
-    private final List<Player> players ;
+    private final List<Player> players;
 
     private final Field field;
 
