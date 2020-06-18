@@ -1,15 +1,11 @@
-package learning.java.game.springController;
+package learning.java.game.rest_controller;
 
-import learning.java.game.DAO.DAO;
-import learning.java.game.gameModel.controller.GameController;
-import learning.java.game.gameModel.controller.GameControllerSingle;
-import learning.java.game.gameModel.controller.TurnController;
-import learning.java.game.gameModel.model.CreateGame;
-import learning.java.game.gameModel.model.Figure;
-import learning.java.game.gameModel.model.Game;
-import learning.java.game.gameModel.model.Point;
-import learning.java.game.requestBody.PostBody;
-import learning.java.game.requestBody.TurnBody;
+import learning.java.game.dao.GameDao;
+import learning.java.game.game_model.controller.GameController;
+import learning.java.game.game_model.model.CreateGame;
+import learning.java.game.game_model.model.Game;
+import learning.java.game.game_model.model.Point;
+import learning.java.game.rest_controller.request_body.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,19 +13,13 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("gameXO")
-public class SpringGameController {
-    @Autowired
-    private CreateGame gameXO;
-
-    @Autowired
-    private DAO dao;
-
+public class GameRestController {
     @Autowired
     GameController gameControl;
-
     @Autowired
-    TurnController turnController;
-
+    private CreateGame gameXO;
+    @Autowired
+    private GameDao dao;
 
     @GetMapping("{id}")
     @ResponseBody
@@ -39,9 +29,9 @@ public class SpringGameController {
 
     @PostMapping
     @ResponseBody
-    public Game postGame (@RequestBody PostBody postBody) {
+    public Game postGame(@RequestBody PostBody postBody) {
         Game game = gameXO.newGame(postBody.getSide());
-        game.setTurn(turnController.currentFigure(game.getField()));
+        game.setTurn(gameControl.currentFigure(game.getField()));
         dao.setDataBase(game.getId(), game);
         return game;
 
@@ -56,7 +46,6 @@ public class SpringGameController {
         gameControl.letsPlay(gameXO, point);
         return gameXO;
     }
-
 
 
 }
