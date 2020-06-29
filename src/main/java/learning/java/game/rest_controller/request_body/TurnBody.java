@@ -4,6 +4,12 @@ public class TurnBody {
 
     private int[] position;
 
+    public TurnBody() {
+    }
+
+    public TurnBody(int i){
+        position = new int[i];
+    }
     public int[] getPosition() {
         return position;
     }
@@ -18,6 +24,14 @@ public class TurnBody {
 
     public int getY() {
         return position[1];
+    }
+
+    public void setX(int i) {
+        position[0] = i;
+    }
+
+    public void setY(int i) {
+        position[0] = i;
     }
 
 }
