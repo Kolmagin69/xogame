@@ -5,26 +5,29 @@ import java.util.UUID;
 
 public class Game {
 
-    private final UUID id = UUID.randomUUID();
+    private UUID id = UUID.randomUUID();
 
-    private final String type;
+    private String type;
 
-    private final String name;
+    private String name;
 
-    private final List<Player> players;
+    private List<Player> players;
 
-    private final Field field;
+    private Field field;
 
     private Figure turn = Figure.X;
 
     private Figure winner = null;
+
+    public Game() {
+
+    };
 
     public Game(String type, String name, List players, Field field) {
         this.field = field;
         this.type = type;
         this.name = name;
         this.players = players;
-
     }
 
     public UUID getId() {
@@ -62,5 +65,29 @@ public class Game {
 
     public List<Player> getPlayers() {
         return players;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("game" + UUID.randomUUID());
     }
 }

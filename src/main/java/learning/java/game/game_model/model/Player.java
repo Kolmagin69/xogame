@@ -4,11 +4,14 @@ import java.util.UUID;
 
 public class Player {
 
-    private final UUID id = UUID.randomUUID();
+    private UUID id = UUID.randomUUID();
 
-    private final String name;
+    private String name;
 
-    private final Figure figure;
+    private Figure figure;
+
+    public Player() {
+    }
 
     public Player(String name, Figure figure) {
         this.name = name;
@@ -25,5 +28,17 @@ public class Player {
 
     public UUID getId() {
         return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setFigure(Figure figure) {
+        this.figure = figure;
     }
 }
