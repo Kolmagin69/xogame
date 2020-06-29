@@ -1,11 +1,11 @@
-package learning.java.game.rest_controller;
+package learning.java.game.rest_controller.request_body;
 
 import learning.java.game.dao.GameDao;
 import learning.java.game.game_model.controller.GameController;
 import learning.java.game.game_model.model.CreateGame;
+import learning.java.game.game_model.model.Figure;
 import learning.java.game.game_model.model.Game;
 import learning.java.game.game_model.model.Point;
-import learning.java.game.rest_controller.request_body.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +15,7 @@ import java.util.UUID;
 @RequestMapping("game")
 public class GameRestController {
     @Autowired
-    GameController gameControl;
+    private GameController gameControl;
     @Autowired
     private CreateGame gameXO;
     @Autowired
@@ -28,9 +28,13 @@ public class GameRestController {
     }
 
     @PostMapping
-    @ResponseBody
-    public Game postGame(@RequestBody PostBody postBody) {
-        Game game = gameXO.newGame(postBody.getSide());
+    public @ResponseBody Game postGame(@RequestBody PostBody postBody) {
+        Figure postFigure = postBody.getSide();
+
+        if (postFigure == null)
+            throw new IllegalArgumentException();
+
+        Game game = gameXO.newGame(postFigure);
         game.setTurn(gameControl.currentFigure(game.getField()));
         dao.setDataBase(game.getId(), game);
         return game;
@@ -38,10 +42,15 @@ public class GameRestController {
     }
 
     @PostMapping("{id}/turn")
-    @ResponseBody
-    public Game turn(@RequestBody TurnBody turnBody,
-                     @PathVariable String id) {
+    public  @ResponseBody Game turn(@RequestBody TurnBody turnBody,
+                                     @PathVariable String id) {
+        if (turnBody == null || id == null)
+            throw new IllegalArgumentException();
+
         Game gameXO = dao.getDataBase().get(UUID.fromString(id));
+        if (gameXO == null)
+            throw new IllegalArgumentException();
+
         Point point = new Point(turnBody.getX(), turnBody.getY());
         gameControl.letsPlay(gameXO, point);
         return gameXO;
