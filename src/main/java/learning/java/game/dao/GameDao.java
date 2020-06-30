@@ -8,14 +8,44 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component
-public class GameDao {
+public class GameDao implements Dao<Game> {
+
     private Map<UUID, Game> dataBase = new HashMap<>();
 
-    public Map<UUID, Game> getDataBase() {
-        return dataBase;
+    @Override
+    public boolean create(Object obj) {
+        if (!(obj instanceof Game))
+            throw new IllegalArgumentException();
+
+        Game game = (Game) obj;
+        UUID id = game.getId();
+
+        return dataBase.putIfAbsent(id, game) == null ? true : false;
     }
 
-    public void setDataBase(UUID id, Game game) {
-        dataBase.put(id, game);
+    @Override
+    public Game read(Object obj) {
+        if (!(obj instanceof UUID))
+            throw new IllegalArgumentException();
+
+        return dataBase.get((UUID) obj);
+    }
+
+    @Override
+    public boolean update(Object obj) {
+        if (!(obj instanceof Game))
+            throw new IllegalArgumentException();
+
+        Game game = (Game) obj;
+        UUID id = game.getId();
+
+        return dataBase.replace(id, game) == null ? true : false;
+    }
+
+    @Override
+    public boolean delete(Object obj) {
+
+        throw new UnsupportedOperationException();
+
     }
 }
