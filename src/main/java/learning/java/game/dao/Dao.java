@@ -1,14 +1,14 @@
 package learning.java.game.dao;
 
-public interface Dao<T> {
+public interface Dao<Entity, Key> {
 
-    boolean create(Object obj);
+    boolean create(Entity entity);
 
-    T read(Object obj);
+    Entity read(Key key);
 
-    boolean update(Object obj);
+    boolean update(Entity entity);
 
-    boolean delete(Object obj);
+    boolean delete(Entity entity);
 
 
 }
