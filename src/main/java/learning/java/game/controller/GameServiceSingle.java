@@ -1,12 +1,12 @@
-package learning.java.game.game_model.controller;
+package learning.java.game.controller;
 
 import learning.java.game.dao.Dao;
-import learning.java.game.game_model.model.CreateGame;
-import learning.java.game.game_model.model.Figure;
-import learning.java.game.game_model.model.Game;
-import learning.java.game.game_model.model.Point;
-import learning.java.game.rest_controller.request_body.PostBody;
-import learning.java.game.rest_controller.request_body.TurnBody;
+import learning.java.game.model.CreateGame;
+import learning.java.game.model.Figure;
+import learning.java.game.model.Game;
+import learning.java.game.model.Point;
+import learning.java.game.rest.PostBody;
+import learning.java.game.rest.TurnBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

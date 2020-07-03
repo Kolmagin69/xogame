@@ -1,16 +1,9 @@
-package learning.java.game.rest_controller.request_body;
+package learning.java.game.rest;
 
-import learning.java.game.dao.GameDao;
-import learning.java.game.game_model.controller.GameController;
-import learning.java.game.game_model.controller.GameService;
-import learning.java.game.game_model.model.CreateGame;
-import learning.java.game.game_model.model.Figure;
-import learning.java.game.game_model.model.Game;
-import learning.java.game.game_model.model.Point;
+import learning.java.game.controller.GameService;
+import learning.java.game.model.Game;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping("game")

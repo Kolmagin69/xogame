@@ -1,9 +1,9 @@
-package learning.java.game.game_model.controller;
+package learning.java.game.controller;
 
-import learning.java.game.game_model.model.Field;
-import learning.java.game.game_model.model.Figure;
-import learning.java.game.game_model.model.Game;
-import learning.java.game.game_model.model.Point;
+import learning.java.game.model.Field;
+import learning.java.game.model.Figure;
+import learning.java.game.model.Game;
+import learning.java.game.model.Point;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;

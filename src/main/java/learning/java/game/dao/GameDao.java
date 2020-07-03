@@ -1,6 +1,6 @@
 package learning.java.game.dao;
 
-import learning.java.game.game_model.model.Game;
+import learning.java.game.model.Game;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

@@ -10,5 +10,4 @@ public interface Dao<Entity, Key> {
 
     boolean delete(Entity entity);
 
-
 }

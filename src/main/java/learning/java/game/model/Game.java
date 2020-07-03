@@ -1,4 +1,4 @@
-package learning.java.game.game_model.model;
+package learning.java.game.model;
 
 import java.util.List;
 import java.util.UUID;
@@ -21,9 +21,9 @@ public class Game {
 
     public Game() {
 
-    };
+    }
 
-    public Game(String type, String name, List players, Field field) {
+    public Game(String type, String name, List<Player> players, Field field) {
         this.field = field;
         this.type = type;
         this.name = name;
