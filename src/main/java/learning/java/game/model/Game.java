@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class Game {
 
-    private UUID id = UUID.randomUUID();
+    private UUID id;
 
     private String type;
 
@@ -87,7 +87,4 @@ public class Game {
         this.field = field;
     }
 
-    public static void main(String[] args) {
-        System.out.println("game" + UUID.randomUUID());
-    }
 }
