@@ -1,4 +1,4 @@
-package learning.java.game.game_model.model;
+package learning.java.game.model;
 
 
 public class Point {

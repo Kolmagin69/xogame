@@ -1,6 +1,6 @@
-package learning.java.game.rest_controller.request_body;
+package learning.java.game.rest;
 
-import learning.java.game.game_model.model.Figure;
+import learning.java.game.model.Figure;
 
 public class PostBody {
     private Figure side;

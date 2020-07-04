@@ -2,13 +2,13 @@ package learning.java.game;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-import learning.java.game.game_model.model.Field;
-import learning.java.game.game_model.model.Figure;
-import learning.java.game.game_model.model.Game;
-import learning.java.game.game_model.model.Point;
-import learning.java.game.rest_controller.request_body.GameRestController;
-import learning.java.game.rest_controller.request_body.PostBody;
-import learning.java.game.rest_controller.request_body.TurnBody;
+import learning.java.game.model.Field;
+import learning.java.game.model.Figure;
+import learning.java.game.model.Game;
+import learning.java.game.model.Point;
+import learning.java.game.rest.GameRestController;
+import learning.java.game.rest.PostBody;
+import learning.java.game.rest.TurnBody;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.util.NestedServletException;
 
 import java.util.Arrays;
 import java.util.UUID;
@@ -42,10 +41,6 @@ public class GameApplicationTests {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Test
-    void contextLoads() {
-    }
 
     @Test
     void testPostGame() throws Exception {
@@ -82,7 +77,8 @@ public class GameApplicationTests {
             String requestBody = "{\"something\":\"O\"}";
             postIncorrectBody(requestBody);
             fail();
-        } catch (NestedServletException e) {
+        } catch (Exception e) {
+
         }
 
         postIncorrectBody("");
@@ -157,7 +153,7 @@ public class GameApplicationTests {
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(objectMapper.writeValueAsString(turnBody)));
             fail();
-        } catch (NestedServletException e) {
+        } catch (Exception e) {
 
         }
     }

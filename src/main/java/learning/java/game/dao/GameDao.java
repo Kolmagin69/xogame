@@ -1,6 +1,6 @@
 package learning.java.game.dao;
 
-import learning.java.game.game_model.model.Game;
+import learning.java.game.model.Game;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
@@ -14,8 +14,8 @@ public class GameDao implements Dao<Game, UUID> {
 
     @Override
     public boolean create(Game game) {
+        game.setId(UUID.randomUUID());
         UUID id = game.getId();
-
         return dataBase.putIfAbsent(id, game) == null ? true : false;
     }
 

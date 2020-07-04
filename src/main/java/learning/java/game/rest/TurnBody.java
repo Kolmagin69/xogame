@@ -1,4 +1,4 @@
-package learning.java.game.rest_controller.request_body;
+package learning.java.game.rest;
 
 public class TurnBody {
 
