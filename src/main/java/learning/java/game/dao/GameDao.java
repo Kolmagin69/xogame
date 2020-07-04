@@ -14,8 +14,8 @@ public class GameDao implements Dao<Game, UUID> {
 
     @Override
     public boolean create(Game game) {
+        game.setId(UUID.randomUUID());
         UUID id = game.getId();
-
         return dataBase.putIfAbsent(id, game) == null ? true : false;
     }
 
