@@ -1,8 +1,9 @@
-package learning.java.game.rest;
+package learning.java.game.rest.request;
 
 import learning.java.game.model.Figure;
 
-public class PostBody {
+public class CreateGameRequest {
+
     private Figure side;
 
     public Figure getSide() {
