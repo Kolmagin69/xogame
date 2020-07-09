@@ -28,11 +28,23 @@ public class Field {
         this.size = size;
         if (figures == null)
             figures = new Figure[size][size];
+
     }
 
     public void setFigures(final Point point, final Figure figure) {
+        int x = point.getX();
+        int y = point.getY();
+        if (x >= size || x < 0 || y >= size || y < 0)
+            throw new IndexOutOfBoundsException
+                    ("Incorrect index.Expected point x = " + x + ", point y = " + y +
+                            ". They must fall into the interval 0 <= point > " + size );
 
-        figures[point.getX()][point.getY()] = figure;
+        Figure actualFigure = figures[x][y];
+        if (actualFigure != null)
+            throw  new IllegalArgumentException
+                    ("Incorrect index. Figure in point x = " + x + ", point y = " + y +
+                            "Not NULL");
+        figures[x][y] = figure;
         counterFigure++;
     }
 
@@ -60,6 +72,5 @@ public class Field {
                 str.append(j).append(" ");
         }
         return str.toString();
-
     }
 }
