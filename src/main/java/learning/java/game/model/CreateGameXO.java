@@ -17,7 +17,7 @@ public class CreateGameXO implements CreateGame {
     }
 
     private List<Player> createPlayer(Figure figure) {
-        List<Player> players = new ArrayList();
+         List<Player> players = new ArrayList<>();
         if (figure == Figure.X) {
             players.add(new Player("player", figure));
             players.add(new Player("AI", Figure.O));
@@ -27,7 +27,5 @@ public class CreateGameXO implements CreateGame {
         players.add(new Player("player", figure));
         players.add(new Player("AI", Figure.X));
         return players;
-
     }
-
 }

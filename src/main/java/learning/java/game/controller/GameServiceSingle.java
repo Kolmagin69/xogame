@@ -6,8 +6,8 @@ import learning.java.game.model.CreateGame;
 import learning.java.game.model.Figure;
 import learning.java.game.model.Game;
 import learning.java.game.model.Point;
-import learning.java.game.rest.PostBody;
-import learning.java.game.rest.TurnBody;
+import learning.java.game.rest.request.CreateGameRequest;
+import learning.java.game.rest.request.TurnGameRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,8 +37,8 @@ public class GameServiceSingle implements GameService {
     }
 
     @Override
-    public Game postNewGame(PostBody postBody) {
-        Figure postFigure = postBody.getSide();
+    public Game postNewGame(CreateGameRequest createGameRequest) {
+        Figure postFigure = createGameRequest.getSide();
 
         if (postFigure == null)
             throw new IllegalArgumentException("Sent request with incorrect body. " +
@@ -51,10 +51,11 @@ public class GameServiceSingle implements GameService {
     }
 
     @Override
-    public Game turnGameFromId(TurnBody turnBody, String id) {
-        if (turnBody == null)
+    public Game turnGameFromId(TurnGameRequest turnGameRequest, String id) {
+        if (turnGameRequest == null ) {
             throw new IllegalArgumentException("Sent request with incorrect body." +
                     " Try - {\"position\":\"[2,2]\"}");
+        }
         if (id == null)
             throw new IllegalArgumentException("Sent request to incorrect address." +
                     " Try - game/{UUID}/turn");
@@ -62,7 +63,7 @@ public class GameServiceSingle implements GameService {
         if (gameXO == null)
             throw new NotFoundExceptions("Game with id: \"" + id + "\" Not found");
 
-        Point point = new Point(turnBody.getX(), turnBody.getY());
+        Point point = new Point(turnGameRequest.getX(), turnGameRequest.getY());
         gameControl.letsPlay(gameXO, point);
 
         return gameXO;
