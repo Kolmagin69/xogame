@@ -2,6 +2,8 @@ package learning.java.game.rest;
 
 import learning.java.game.controller.GameService;
 import learning.java.game.model.Game;
+import learning.java.game.rest.request.CreateGameRequest;
+import learning.java.game.rest.request.TurnGameRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,15 +21,15 @@ public class GameRestController {
     }
 
     @PostMapping
-    public @ResponseBody Game postGame(@RequestBody PostBody postBody) {
-        return gameService.postNewGame(postBody);
+    public @ResponseBody Game postGame(@RequestBody CreateGameRequest createGameRequest) {
+        return gameService.postNewGame(createGameRequest);
     }
 
     @PostMapping("{id}/turn")
-    public  @ResponseBody Game turn(@RequestBody TurnBody turnBody,
+    public  @ResponseBody Game turn(@RequestBody TurnGameRequest turnGameRequest,
                                      @PathVariable String id) {
 
-        return gameService.turnGameFromId(turnBody, id);
+        return gameService.turnGameFromId(turnGameRequest, id);
     }
 
 
