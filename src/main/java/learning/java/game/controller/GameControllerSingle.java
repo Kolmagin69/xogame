@@ -15,43 +15,42 @@ public class GameControllerSingle implements GameController {
         Field field = game.getField();
 
         if (game.getPlayers().get(0).getFigure() == Figure.X) {
-            applyFigure(field, point, currentFigure(field));
+            applyFigure(field, point);
             randomMove(field);
             game.setWinner(checkLineWinner(field));
             return;
         }
         randomMove(field);
-        applyFigure(field, point, currentFigure(field));
+        applyFigure(field, point);
         game.setWinner(checkLineWinner(field));
     }
 
-    private void randomMove(Field field) {
+    private void randomMove(final Field field) {
         Random random = new Random();
         Figure figure = currentFigure(field);
         int size = field.getSize();
-        while (!(applyFigure(field, new Point(random.nextInt(size), random.nextInt(3)), figure))) ;
+        Point point = new Point(random.nextInt(size), random.nextInt(size));
 
-
+        try {
+            field.setFigures(point, figure);
+        } catch (IllegalArgumentException e) {
+            randomMove(field);
+        }
     }
 
-    private boolean applyFigure(final Field field, final Point point, final Figure figure) {
-        if (field.getFigure(point) != null)
-            return false;
-        field.setFigures(point, figure);
-        return true;
+    private void applyFigure(final Field field, final Point point) {
+        field.setFigures(point, currentFigure(field));
     }
-
 
     public Figure currentFigure(final Field field) {
         if (field.getCounterFigure() % 2 == 1) return Figure.O;
         return Figure.X;
     }
 
-    private  final Figure X = Figure.X;
+    private final Figure X = Figure.X;
     private final Figure O = Figure.O;
 
     public Figure checkLineWinner(final Field field) {
-
         int fieldSize = field.getSize();
 
         int counterX = 0;
@@ -116,9 +115,6 @@ public class GameControllerSingle implements GameController {
             if (counterO == fieldSize)
                 return O;
         }
-
         return null;
     }
-
-
 }
