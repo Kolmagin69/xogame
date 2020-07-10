@@ -8,6 +8,13 @@ CREATE TABLE fields (
 	figures varchar(1)[][]
 );
 
+CREATE TABLE players (
+	id uuid PRIMARY KEY,
+	name varchar(255),
+	figure varchar(1),
+	game_id uuid REFERENCES GAMES(id)
+);
+
 CREATE TABLE games (
 	id uuid PRIMARY KEY,
 	type varchar(255),
@@ -17,9 +24,4 @@ CREATE TABLE games (
 	field_id int REFERENCES fields(id)
 );
 
-CREATE TABLE players (
-	id uuid PRIMARY KEY,
-	name varchar(255),
-	figure varchar(1),
-	game_id uuid REFERENCES GAMES(id)
-);
+
