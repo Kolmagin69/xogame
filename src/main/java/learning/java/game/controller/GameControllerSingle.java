@@ -32,14 +32,14 @@ public class GameControllerSingle implements GameController {
         Point point = new Point(random.nextInt(size), random.nextInt(size));
 
         try {
-            field.setFigures(point, figure);
+            field.setFigure(point, figure);
         } catch (IllegalArgumentException e) {
             randomMove(field);
         }
     }
 
     private void applyFigure(final Field field, final Point point) {
-        field.setFigures(point, currentFigure(field));
+        field.setFigure(point, currentFigure(field));
     }
 
     public Figure currentFigure(final Field field) {
