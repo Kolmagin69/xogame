@@ -11,7 +11,9 @@ public class Game {
 
     private String name;
 
-    private List<Player> players;
+    private Player player1;
+
+    private Player player2;
 
     private Field field;
 
@@ -23,11 +25,12 @@ public class Game {
 
     }
 
-    public Game(String type, String name, List<Player> players, Field field) {
+    public Game(String type, String name, Player player1, Player player2, Field field) {
         this.field = field;
         this.type = type;
         this.name = name;
-        this.players = players;
+        this.player1 = player1;
+        this.player1 = player2;
     }
 
     public UUID getId() {
@@ -63,9 +66,6 @@ public class Game {
         this.winner = winner;
     }
 
-    public List<Player> getPlayers() {
-        return players;
-    }
 
     public void setId(UUID id) {
         this.id = id;
@@ -79,8 +79,20 @@ public class Game {
         this.name = name;
     }
 
-    public void setPlayers(List<Player> players) {
-        this.players = players;
+    public Player getPlayer1() {
+        return player1;
+    }
+
+    public void setPlayer1(Player player1) {
+        this.player1 = player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
+    public void setPlayer2(Player player2) {
+        this.player2 = player2;
     }
 
     public void setField(Field field) {
