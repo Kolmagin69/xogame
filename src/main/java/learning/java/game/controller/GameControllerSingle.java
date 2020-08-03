@@ -1,9 +1,6 @@
 package learning.java.game.controller;
 
-import learning.java.game.model.Field;
-import learning.java.game.model.Figure;
-import learning.java.game.model.Game;
-import learning.java.game.model.Point;
+import learning.java.game.model.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
@@ -11,18 +8,36 @@ import java.util.Random;
 @Component
 public class GameControllerSingle implements GameController {
 
-    public void letsPlay(Game game, Point point) {
+    public Game newGame(Figure figure) {
+        return new Game(){{
+            setType("singlePlayer");
+            setName("XO");
+            setPlayer1(new Player("player"));
+            setPlayer2(new Player("AI"));
+            setFigure1(figure);
+            setFigure2(oppositeFig(figure));
+            setField(new Field(3));
+            setTurn(Figure.X);
+        }};
+    }
+
+    private Figure oppositeFig(Figure figure) {
+        return Figure.X == figure ? Figure.X : Figure.O;
+    }
+
+    public Figure letsPlay(Game game, Point point) {
         Field field = game.getField();
 
-        if (game.getPlayers().get(0).getFigure() == Figure.X) {
+        if (game.getFigure1() == Figure.X) {
             applyFigure(field, point);
             randomMove(field);
             game.setWinner(checkLineWinner(field));
-            return;
+            return game.getWinner();
         }
         randomMove(field);
         applyFigure(field, point);
         game.setWinner(checkLineWinner(field));
+        return game.getWinner();
     }
 
     private void randomMove(final Field field) {
