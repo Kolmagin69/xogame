@@ -1,5 +1,6 @@
 package learning.java.game;
 
+import learning.java.game.controller.GameControllerSingle;
 import learning.java.game.dao.*;
 import learning.java.game.model.*;
 import org.junit.jupiter.api.Test;
@@ -36,11 +37,11 @@ public class GameApplicationTests {
     @Autowired
     private MockMvc mockMvc;
 
-    private Dao<Game, UUID> dao() throws SQLException {
-        return new GamesDao(new DataConnection().get(),
-                new FieldsDao(new DataConnection().get()),
-                new PlayersDao(new DataConnection().get()));
-    }
+    @Autowired
+    private GamesDao dao;
+
+    @Autowired
+    private PlayersDao playersDao;
 
     @Test
     void testPostGame() throws Exception {
@@ -66,7 +67,7 @@ public class GameApplicationTests {
 
     @Test
     void testGameFromId() throws Exception {
-        String id = createGameAndReturnId(dao());
+        String id = createGameAndReturnId(dao);
         String urlTemplate = "/game/" + id;
         String response = readFromJson("/get/get_game_response.json").replace("${id}", id);
 
@@ -75,7 +76,7 @@ public class GameApplicationTests {
 
     @Test
     void testFailTryGetGameWithIncorrectId() throws Exception {
-        String id = createGameAndReturnId(dao());
+        String id = createGameAndReturnId(dao);
         String urlTemplateCorrect = "/game/" + id;
         String urlTemplateIncorrect1 = "/game/" + UUID.randomUUID();
         String urlTemplateIncorrect2 = "/game/" + "Incorrect path";
@@ -93,7 +94,7 @@ public class GameApplicationTests {
     @Test
     void testTurn() throws Exception {
         //create game and check figure into games field on point(2,2)
-        Game game = createGameXO(dao());
+        Game game = createGameXO(dao);
         Point point = new Point(2, 2);
         Figure figureOld = game.getField().getFigure(point);
         assertNull(figureOld);
@@ -109,14 +110,14 @@ public class GameApplicationTests {
         mockMvcPostRequest(url, request, response, status().isOk());
 
         //repeatedly check figure on point(2,2)
-        Game actualGame = dao().read(game.getId());
+        Game actualGame = dao.read(game.getId());
         Figure figureActual = actualGame.getField().getFigure(point);
         assertEquals(Figure.O, figureActual);
     }
 
     @Test
     void testFailWhenTryTurnWIthIncorrectGameId() throws Exception {
-        String id = createGameAndReturnId(dao());
+        String id = createGameAndReturnId(dao);
         String url = "/game/" + id + "/turn";
         String urlBad1 = "/game/" + UUID.randomUUID() + "/turn";
         String urlBad2 = "/game/" + "Incorrect path" + "/turn";
@@ -134,7 +135,7 @@ public class GameApplicationTests {
 
     @Test
     void testFailWhenTryTurnWIthIncorrectBodyRequest() throws Exception {
-        String id = createGameAndReturnId(dao());
+        String id = createGameAndReturnId(dao);
         String url = "/game/" + id + "/turn";
 
         String requestBad1 = readFromJson("/post/turn/turn_incorrect_request1.json");
@@ -152,21 +153,11 @@ public class GameApplicationTests {
     //further are private methods
 
     private Game createGameXO(Dao<Game, UUID> dao) throws SQLException {
-        Game game = new Game(
-                "singlePlayer",
-                "XO",
-                new ArrayList<Player>(){{
-                    add(new Player("player", Figure.O));
-                    add(new Player("AI", Figure.X));
-                }},
-                new Field(3)
-        ) {{
-            setTurn(Figure.X);
-            setWinner(null);
-        }};
-
-        UUID gameId = dao().create(game);
-        game.setId(gameId);
+        GameControllerSingle controllerSingle = new GameControllerSingle();
+        Game game = controllerSingle.newGame(Figure.O);
+        playersDao.create(game.getPlayer1().getPlayer());
+        playersDao.create(game.getPlayer2().getPlayer());
+        dao.create(game);
         return game;
     }
 
@@ -194,8 +185,8 @@ public class GameApplicationTests {
                 .andExpect(content().json(response));
     }
 
-    private String createGameAndReturnId(Dao dao) throws SQLException {
-        Game expectedGame = createGameXO(dao());
+    private String createGameAndReturnId(Dao<Game, UUID> dao) throws SQLException {
+        Game expectedGame = createGameXO(dao);
         return expectedGame.getId().toString();
     }
 
