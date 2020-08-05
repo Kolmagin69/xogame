@@ -2,7 +2,6 @@ package learning.java.game.controller;
 
 import learning.java.game.dao.*;
 import learning.java.game.exception.NotFoundExceptions;
-import learning.java.game.model.CreateGame;
 import learning.java.game.model.Figure;
 import learning.java.game.model.Game;
 import learning.java.game.model.Point;
@@ -21,12 +20,15 @@ public class GameServiceSingle implements GameService {
     private GameController gameControl;
 
     @Autowired
-    private CreateGame gameXO;
+    private GamesDao dao;
+
+    @Autowired
+    private PlayersDao playersDao;
 
     @Override
     public Game getGameFromId(String id) throws SQLException {
         UUID key = UUID.fromString(id);
-        Game game = dao().read(key);
+        Game game = dao.read(key);
         if(game == null || game.getId() == null)
             throw new NotFoundExceptions("Not found game with this id: " + key);
 
@@ -41,9 +43,11 @@ public class GameServiceSingle implements GameService {
             throw new IllegalArgumentException("Sent request with incorrect body. " +
                     "Try - {\"side\":\"X\"}");
 
-        Game game = gameXO.newGame(postFigure);
+        Game game = gameControl.newGame(postFigure);
         game.setTurn(gameControl.currentFigure(game.getField()));
-        dao().create(game);
+        playersDao.create(game.getPlayer1().getPlayer());
+        playersDao.create(game.getPlayer2().getPlayer());
+        dao.create(game);
         return game;
     }
 
@@ -56,19 +60,15 @@ public class GameServiceSingle implements GameService {
         if (id == null)
             throw new IllegalArgumentException("Sent request to incorrect address." +
                     " Try - game/{UUID}/turn");
-        Game gameXO = dao().read(UUID.fromString(id));
+        Game gameXO = dao.read(UUID.fromString(id));
         if (gameXO == null || gameXO.getId() == null)
             throw new NotFoundExceptions("Game with id: \"" + id + "\" Not found");
 
         Point point = new Point(turnGameRequest.getX(), turnGameRequest.getY());
         gameControl.letsPlay(gameXO, point);
-        dao().update(gameXO);
+        dao.update(gameXO);
         return gameXO;
     }
 
-    private Dao<Game, UUID> dao() throws SQLException {
-        return new GamesDao( new DataConnection().get(),
-                new FieldsDao(new DataConnection().get()),
-                new PlayersDao(new DataConnection().get()));
-    }
+
 }
