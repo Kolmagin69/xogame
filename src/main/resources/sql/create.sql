@@ -6,18 +6,12 @@ GRANT ALL PRIVILEGES ON DATABASE xogame TO xogame;
 CREATE TABLE fields(
 	id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
 	size int NOT NULL,
-	figures varchar(1)[][]
+	figures varchar(1)[][] NOT NULL
 );
 
 CREATE TABLE players (
 	id uuid PRIMARY KEY,
 	name varchar(255),
-);
-
-CREATE TABLE player_figures (
-    id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-    player uuid REFERENCES players(id),
-    figure id REFERENCES figures(id)
 );
 
 CREATE TABLE games (
@@ -26,11 +20,13 @@ CREATE TABLE games (
 	name varchar(255) NOT NULL,
 	turn varchar(1) NOT NULL,
 	winner varchar(1),
-	field_id int,
-	player_1 int,
-	player_2 int,
+	field_id int NOT NULL,
 	FOREIGN KEY (field_id) REFERENCES fields(id) ON DELETE CASCADE,
-	FOREIGN KEY (player_1) REFERENCES player_figures(id) ON DELETE CASCADE,
-	FOREIGN KEY (player_2) REFERENCES player_figures(id) ON DELETE CASCADE
 );
 
+CREATE TABLE player_figures (
+    id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    player_id uuid REFERENCES players(id),
+    figure varchar(1),
+    game_id uuid REFERENCES games(id) NOT NULL
+);
