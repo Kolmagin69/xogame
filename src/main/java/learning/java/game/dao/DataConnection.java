@@ -9,18 +9,13 @@ import java.sql.SQLException;
 @Component
 public class DataConnection {
 
-    private final String user = "xogame";
+    private static final String user = "postgres";
 
-    private final String password = "123321";
+    private static final String password = "90224";
 
-    private final String url = "jdbc:postgresql://localhost:5432/xogame";
+    private static final String url = "jdbc:postgresql://localhost:5432/xogame";
 
-    private final Connection connection = DriverManager.getConnection(url, user, password);
-
-    public DataConnection() throws SQLException {
-    }
-
-    public Connection get() {
-        return connection;
+    public static Connection get() throws SQLException {
+        return DriverManager.getConnection(url, user, password);
     }
 }
