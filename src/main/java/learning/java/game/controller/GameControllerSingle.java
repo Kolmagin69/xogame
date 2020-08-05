@@ -12,23 +12,26 @@ public class GameControllerSingle implements GameController {
         return new Game(){{
             setType("singlePlayer");
             setName("XO");
-            setPlayer1(new Player("player"));
-            setPlayer2(new Player("AI"));
-            setFigure1(figure);
-            setFigure2(oppositeFig(figure));
+            setPlayer1(new PlayerFigure(){{
+                setPlayer(new Player("player"));
+                setFigure(figure);
+            }});
+            setPlayer2(new PlayerFigure(){{
+                setPlayer(new Player("AI"));
+                setFigure(oppositeFig(figure));
+            }});
             setField(new Field(3));
             setTurn(Figure.X);
         }};
     }
 
     private Figure oppositeFig(Figure figure) {
-        return Figure.X == figure ? Figure.X : Figure.O;
+        return Figure.X == figure ? Figure.O : Figure.X;
     }
 
     public Figure letsPlay(Game game, Point point) {
         Field field = game.getField();
-
-        if (game.getFigure1() == Figure.X) {
+        if (game.getPlayer1().getFigure() == Figure.X) {
             applyFigure(field, point);
             randomMove(field);
             game.setWinner(checkLineWinner(field));
