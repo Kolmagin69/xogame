@@ -15,7 +15,13 @@ public class DataConnection {
 
     private static final String url = "jdbc:postgresql://localhost:5432/xogame";
 
-    public static Connection get() throws SQLException {
-        return DriverManager.getConnection(url, user, password);
+    public static Connection get() {
+        Connection connection = null;
+        try {
+            connection =  DriverManager.getConnection(url, user, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return connection;
     }
 }
