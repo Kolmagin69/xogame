@@ -8,16 +8,18 @@ import java.util.Random;
 @Component
 public class GameControllerSingle implements GameController {
 
-    public Game newGame(Figure figure) {
+    public Game newGame(Figure figure, Player player) {
         return new Game(){{
             setType("singlePlayer");
             setName("XO");
             setPlayer1(new PlayerFigure(){{
-                setPlayer(new Player("player"));
+                setPlayer(player);
                 setFigure(figure);
             }});
             setPlayer2(new PlayerFigure(){{
-                setPlayer(new Player("AI"));
+                setPlayer(new Player("AI"){{
+                    setId(null);
+                }});
                 setFigure(oppositeFig(figure));
             }});
             setField(new Field(3));
