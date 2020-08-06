@@ -13,7 +13,7 @@ import java.util.UUID;
 public class PlayersDao implements Dao<Player, UUID> {
 
     @Override
-    public UUID create(Player player) throws SQLException {
+    public UUID create(Player player) {
         return execute(SQLPlayer.INSERT, statement -> {
             statement.setObject(1, player.getId());
             statement.setString(2, player.getName());
@@ -25,8 +25,8 @@ public class PlayersDao implements Dao<Player, UUID> {
     }
 
     @Override
-    public Player read(UUID uuid) throws SQLException {
-        final Player player = new Player();
+    public Player read(UUID uuid) {
+        final Player player = new Player("");
         return execute(SQLPlayer.SELECT, statement -> {
             statement.setObject(1, uuid);
             ResultSet resultSet = statement.executeQuery();
@@ -38,7 +38,7 @@ public class PlayersDao implements Dao<Player, UUID> {
     }
 
     @Override
-    public UUID update(Player player) throws SQLException {
+    public UUID update(Player player) {
         return execute(SQLPlayer.UPDATE, statement -> {
             statement.setObject(2,player.getId());
             statement.setString(1, player.getName());
@@ -49,7 +49,7 @@ public class PlayersDao implements Dao<Player, UUID> {
     }
 
     @Override
-    public boolean delete(Player player) throws SQLException {
+    public boolean delete(Player player) {
         return execute(SQLPlayer.DELETE, statement -> {
             statement.setObject(1, player.getId());
             return statement.executeQuery().next();
@@ -57,16 +57,18 @@ public class PlayersDao implements Dao<Player, UUID> {
     }
 
     private <R> R execute(SQLPlayer sql,
-                          SQLFunction<PreparedStatement, R> statementRSQLFunction)
-            throws SQLException {
+                          SQLFunction<PreparedStatement, R> statementRSQLFunction) {
+        R result = null;
         try (Connection connection = getConnection();
              PreparedStatement statement = connection.prepareStatement(sql.QUERY)) {
-
-            return statementRSQLFunction.apply(statement);
+            result = statementRSQLFunction.apply(statement);
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return result;
     }
 
-    private Connection getConnection() throws SQLException {
+    private Connection getConnection() {
         return DataConnection.get();
     }
 
@@ -83,3 +85,4 @@ public class PlayersDao implements Dao<Player, UUID> {
         }
     }
 }
+
