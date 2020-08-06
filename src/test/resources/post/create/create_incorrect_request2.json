@@ -1,3 +1,7 @@
 {
-  "wrong": "O"
+  "wrong": "O",
+  "player": {
+    "id" : "${id}",
+    "name" : "player"
+  }
 }

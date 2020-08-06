@@ -1,3 +1,7 @@
 {
-  "side": "O"
+  "side": "X",
+  "player": {
+    "id" : "${id}",
+    "name" : "player"
+  }
 }
