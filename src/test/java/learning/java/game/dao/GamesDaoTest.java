@@ -48,8 +48,8 @@ class GamesDaoTest {
         UUID id = gameKeySet.getLast();
         Game game = dao.read(id);
 
-        System.out.println(dao.read(id).getId());
         dao.delete(game);
-        System.out.println(dao.read(id).getId());
+        dao.read(id);
+        dao.read(id);
     }
 }
