@@ -1,5 +1,6 @@
 package learning.java.game.controller;
 
+import learning.java.game.exception.GameOverException;
 import learning.java.game.model.*;
 import org.springframework.stereotype.Component;
 
@@ -36,12 +37,12 @@ public class GameControllerSingle implements GameController {
         if (game.getPlayer1().getFigure() == Figure.X) {
             applyFigure(field, point);
             randomMove(field);
-            game.setWinner(checkLineWinner(field));
+            game.setWinner(checkAndSetWinner(game));
             return game.getWinner();
         }
         randomMove(field);
         applyFigure(field, point);
-        game.setWinner(checkLineWinner(field));
+        game.setWinner(checkAndSetWinner(game));
         return game.getWinner();
     }
 
@@ -70,19 +71,25 @@ public class GameControllerSingle implements GameController {
     private final Figure X = Figure.X;
     private final Figure O = Figure.O;
 
-    public Figure checkLineWinner(final Field field) {
-        int fieldSize = field.getSize();
+    private Figure checkAndSetWinner(final Game game) {
+        final Figure figure = checkLineWinner(game);
+        if (figure != null) {
+            game.setWinner(figure);
+            throw new GameOverException(game);
+        }
+        return null;
+    }
 
+    private Figure checkLineWinner(final Game game) {
+        int fieldSize = game.getField().getSize();
         int counterX = 0;
-
         int counterO = 0;
-
         for (int i = 0; i < fieldSize; i++) {
             for (int j = 0; j < fieldSize; j++) {
                 Point point = new Point(i, j);
-                if ((X).equals(field.getFigure(point)))
+                if ((X).equals(getFig(game, point)))
                     counterX++;
-                if ((X).equals(field.getFigure(point)))
+                if ((X).equals(getFig(game, point)))
                     counterO++;
                 if (counterX == fieldSize)
                     return X;
@@ -96,9 +103,9 @@ public class GameControllerSingle implements GameController {
         for (int i = 0; i < fieldSize; i++) {
             for (int j = 0; j < fieldSize; j++) {
                 Point point = new Point(j, i);
-                if ((X).equals(field.getFigure(point)))
+                if ((X).equals(getFig(game, point)))
                     counterX++;
-                if ((O).equals(field.getFigure(point)))
+                if ((O).equals(getFig(game, point)))
                     counterO++;
                 if (counterX == fieldSize)
                     return X;
@@ -111,9 +118,9 @@ public class GameControllerSingle implements GameController {
 
         for (int i = 0; i < fieldSize; i++) {
             Point point = new Point(i, i);
-            if ((X).equals(field.getFigure(point)))
+            if ((X).equals(getFig(game, point)))
                 counterX++;
-            if ((O).equals(field.getFigure(point)))
+            if ((O).equals(getFig(game, point)))
                 counterO++;
             if (counterX == fieldSize)
                 return X;
@@ -126,9 +133,9 @@ public class GameControllerSingle implements GameController {
         int pointX = fieldSize;
         for (int i = 0; i < fieldSize; i++) {
             Point point = new Point(--pointX, i);
-            if ((X).equals(field.getFigure(point)))
+            if ((X).equals(getFig(game, point)))
                 counterX++;
-            if ((O).equals((field.getFigure(point))))
+            if ((O).equals((getFig(game, point))))
                 counterO++;
             if (counterX == fieldSize)
                 return X;
@@ -136,5 +143,9 @@ public class GameControllerSingle implements GameController {
                 return O;
         }
         return null;
+    }
+    
+    private Figure getFig(final Game game, final Point point) {
+        return game.getField().getFigure(point);
     }
 }
