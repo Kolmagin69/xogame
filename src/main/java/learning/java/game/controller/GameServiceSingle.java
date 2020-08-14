@@ -23,9 +23,6 @@ public class GameServiceSingle implements GameService {
     @Autowired
     private GamesDao dao;
 
-    @Autowired
-    private PlayersDao playersDao;
-
     @Override
     public Game getGameFromId(String id) {
         UUID key = UUID.fromString(id);
