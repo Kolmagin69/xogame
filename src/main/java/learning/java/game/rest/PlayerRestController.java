@@ -3,6 +3,7 @@ package learning.java.game.rest;
 import learning.java.game.dao.PlayersDao;
 import learning.java.game.model.Player;
 import learning.java.game.rest.request.PlayerName;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -11,7 +12,8 @@ import java.util.UUID;
 @RequestMapping("player")
 public class PlayerRestController {
 
-    PlayersDao dao = new PlayersDao();
+    @Autowired
+    private PlayersDao dao;
 
     @PostMapping()
     public Player postPlayer(final @RequestBody PlayerName name) {
