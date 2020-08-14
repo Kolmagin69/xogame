@@ -1,6 +1,7 @@
 package learning.java.game.dao;
 
 import learning.java.game.model.Player;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -11,6 +12,9 @@ import java.util.UUID;
 
 @Component
 public class PlayersDao implements Dao<Player, UUID> {
+
+    @Autowired
+    private DataConnection dataConnection;
 
     @Override
     public UUID create(Player player) {
@@ -69,7 +73,7 @@ public class PlayersDao implements Dao<Player, UUID> {
     }
 
     private Connection getConnection() {
-        return DataConnection.get();
+        return dataConnection.get();
     }
 
     private enum SQLPlayer {

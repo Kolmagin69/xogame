@@ -2,6 +2,7 @@ package learning.java.game.dao;
 
 import learning.java.game.controller.GameControllerSingle;
 import learning.java.game.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.*;
@@ -9,6 +10,9 @@ import java.util.UUID;
 
 @Component
 public class GamesDao implements Dao<Game, UUID> {
+
+    @Autowired
+    private DataConnection dataConnection;
 
     @Override
     public UUID create(Game game) {
@@ -60,16 +64,18 @@ public class GamesDao implements Dao<Game, UUID> {
             return  execute(SQLGames.SELECT, (connection, statement) -> {
                 statement.setObject(1, uuid);
                 ResultSet resultSet = statement.executeQuery();
-                resultSet.next();
-                Game game = controllerSingle
-                        .newGame(Figure.figureFromString(resultSet.getString("figure")), null);
-                game.setId((UUID) resultSet.getObject("game_id"));
-                game.setName(resultSet.getString("name"));
-                game.setType(resultSet.getString("type"));
-                game.setTurn(Figure.figureFromString(resultSet.getString("turn")));
-                game.setWinner(Figure.figureFromString(resultSet.getString("winner")));
-                game.setField(readFields(resultSet.getInt("field_id")));
-                game.setPlayer1(readPlayerFigures(resultSet, connection));
+                Game game = null;
+                while (resultSet.next()) {
+                    game = controllerSingle
+                            .newGame(Figure.figureFromString(resultSet.getString("figure")), null);
+                    game.setId((UUID) resultSet.getObject("game_id"));
+                    game.setName(resultSet.getString("name"));
+                    game.setType(resultSet.getString("type"));
+                    game.setTurn(Figure.figureFromString(resultSet.getString("turn")));
+                    game.setWinner(Figure.figureFromString(resultSet.getString("winner")));
+                    game.setField(readFields(resultSet.getInt("field_id")));
+                    game.setPlayer1(readPlayerFigures(resultSet, connection));
+                }
                 return game;
             });
     }
@@ -156,7 +162,7 @@ public class GamesDao implements Dao<Game, UUID> {
     }
 
     private Connection getConnection(){
-       return DataConnection.get();
+       return dataConnection.get();
     }
 
     private <R> R execute(SQLGames sql,
