@@ -5,16 +5,17 @@ import learning.java.game.model.*;
 import org.springframework.stereotype.Component;
 
 import java.util.Random;
+import java.util.function.BiFunction;
 
 @Component
 public class GameControllerSingle implements GameController {
 
-    public Game newGame(Figure figure, Player player) {
+    public Game newGame(Figure figure, Player player1, Player player2) {
         return new Game(){{
             setType("singlePlayer");
             setName("XO");
             setPlayer1(new PlayerFigure(){{
-                setPlayer(player);
+                setPlayer(player1);
                 setFigure(figure);
             }});
             setPlayer2(new PlayerFigure(){{
@@ -82,60 +83,39 @@ public class GameControllerSingle implements GameController {
 
     private Figure checkLineWinner(final Game game) {
         int fieldSize = game.getField().getSize();
-        int counterX = 0;
+        for (int i = 0; i < fieldSize; i++) {
+            final Figure figure = checkLine(game, i, (x, y) -> new Point(x, y));
+            if (figure != null)
+                return figure;
+        }
+
+        for (int i = 0; i < fieldSize; i++) {
+            final Figure figure2 = checkLine(game, i, (x, y) -> new Point(y, x));
+            if (figure2 != null)
+                return figure2;
+        }
+
+        final Figure figure3 = checkLine(game, -1, (x, y) -> new Point(y, y));
+        if (figure3 != null)
+            return figure3;
+
+        final Figure figure4 = checkLine(game, fieldSize - 1, (x, y) -> new Point(x-y, y));
+        if (figure4 != null)
+            return figure4;
+
+       return null;
+    }
+
+    private Figure checkLine(final Game game, int i, final BiFunction<Integer, Integer, Point> biFunction) {
         int counterO = 0;
-        for (int i = 0; i < fieldSize; i++) {
-            for (int j = 0; j < fieldSize; j++) {
-                Point point = new Point(i, j);
-                if ((X).equals(getFig(game, point)))
-                    counterX++;
-                if ((X).equals(getFig(game, point)))
-                    counterO++;
-                if (counterX == fieldSize)
-                    return X;
-                if (counterO == fieldSize)
-                    return O;
-            }
-            counterO = 0;
-            counterX = 0;
-        }
-
-        for (int i = 0; i < fieldSize; i++) {
-            for (int j = 0; j < fieldSize; j++) {
-                Point point = new Point(j, i);
-                if ((X).equals(getFig(game, point)))
-                    counterX++;
-                if ((O).equals(getFig(game, point)))
-                    counterO++;
-                if (counterX == fieldSize)
-                    return X;
-                if (counterO == fieldSize)
-                    return O;
-            }
-            counterO = 0;
-            counterX = 0;
-        }
-
-        for (int i = 0; i < fieldSize; i++) {
-            Point point = new Point(i, i);
-            if ((X).equals(getFig(game, point)))
+        int counterX = 0;
+        Field field = game.getField();
+        int fieldSize = field.getSize();
+        for (int j = 0; j < fieldSize; j++) {
+            Point point = biFunction.apply(i, j);
+            if ((X).equals(field.getFigure(point)))
                 counterX++;
-            if ((O).equals(getFig(game, point)))
-                counterO++;
-            if (counterX == fieldSize)
-                return X;
-            if (counterO == fieldSize)
-                return O;
-        }
-
-        counterO = 0;
-        counterX = 0;
-        int pointX = fieldSize;
-        for (int i = 0; i < fieldSize; i++) {
-            Point point = new Point(--pointX, i);
-            if ((X).equals(getFig(game, point)))
-                counterX++;
-            if ((O).equals((getFig(game, point))))
+            if ((O).equals(field.getFigure(point)))
                 counterO++;
             if (counterX == fieldSize)
                 return X;
@@ -143,9 +123,5 @@ public class GameControllerSingle implements GameController {
                 return O;
         }
         return null;
-    }
-    
-    private Figure getFig(final Game game, final Point point) {
-        return game.getField().getFigure(point);
     }
 }
