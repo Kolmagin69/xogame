@@ -4,7 +4,7 @@ import learning.java.game.model.*;
 
 public interface GameController {
 
-    Game newGame(Figure figure, Player player);
+    Game newGame(Figure figure, Player player1, Player player2);
 
     Figure letsPlay(Game game, Point point);
 

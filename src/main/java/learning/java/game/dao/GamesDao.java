@@ -67,7 +67,7 @@ public class GamesDao implements Dao<Game, UUID> {
                 Game game = null;
                 while (resultSet.next()) {
                     game = controllerSingle
-                            .newGame(Figure.figureFromString(resultSet.getString("figure")), null);
+                            .newGame(Figure.figureFromString(resultSet.getString("figure")), null, null);
                     game.setId((UUID) resultSet.getObject("game_id"));
                     game.setName(resultSet.getString("name"));
                     game.setType(resultSet.getString("type"));
@@ -105,6 +105,7 @@ public class GamesDao implements Dao<Game, UUID> {
 
     private Field readFields(int id) {
         final Field[] field = new Field[1];
+
         return execute(SQLGames.SELECT_FIELDS, (connection, statement) -> {
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -166,7 +167,7 @@ public class GamesDao implements Dao<Game, UUID> {
     }
 
     private <R> R execute(SQLGames sql,
-                          SQLFunctionTwoType<Connection, PreparedStatement, R> statementTFunction) {
+                          SQLBiFunction<Connection, PreparedStatement, R> statementTFunction) {
         R result = null;
         try (Connection connection = getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql.QUERY)) {

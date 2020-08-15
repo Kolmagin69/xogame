@@ -21,7 +21,7 @@ class GamesDaoTest {
     void create() {
         Player player = new Player("Max");
         playersDao.create(player);
-        Game game = gameController.newGame(Figure.X, player);
+        Game game = gameController.newGame(Figure.X, player, null);
         gameKeySet.add(dao.create(game));
     }
 

@@ -176,7 +176,7 @@ public class GameApplicationTests {
 
     private Game createGameXO(Dao<Game, UUID> dao)  {
         GameControllerSingle controllerSingle = new GameControllerSingle();
-        Game game = controllerSingle.newGame(Figure.X, new Player("player"));
+        Game game = controllerSingle.newGame(Figure.X, new Player("player"), null);
         playersDao.create(game.getPlayer1().getPlayer());
         dao.create(game);
         return game;
