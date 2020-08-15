@@ -3,13 +3,13 @@ package learning.java.game.rest.request;
 import learning.java.game.model.Figure;
 import learning.java.game.model.Player;
 
-import java.util.UUID;
-
 public class CreateGameRequest {
 
     private Figure side;
 
-    private Player player;
+    private Player player1;
+
+    private Player player2;
 
     public Figure getSide() {
         return side;
@@ -19,11 +19,19 @@ public class CreateGameRequest {
         this.side = side;
     }
 
-    public Player getPlayer() {
-        return player;
+    public Player getPlayer1() {
+        return player1;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
+    public void setPlayer1(Player player1) {
+        this.player1 = player1;
+    }
+
+    public Player getPlayer2() {
+        return player2;
+    }
+
+    public void setPlayer2(Player player2) {
+        this.player2 = player2;
     }
 }
