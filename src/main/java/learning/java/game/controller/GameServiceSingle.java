@@ -1,7 +1,6 @@
 package learning.java.game.controller;
 
 import learning.java.game.dao.GamesDao;
-import learning.java.game.dao.PlayersDao;
 import learning.java.game.exception.NotFoundExceptions;
 import learning.java.game.model.Figure;
 import learning.java.game.model.Game;
@@ -36,12 +35,12 @@ public class GameServiceSingle implements GameService {
     @Override
     public Game postNewGame(CreateGameRequest createGameRequest) {
         Figure postFigure = createGameRequest.getSide();
-        Player player = createGameRequest.getPlayer();
+        Player player = createGameRequest.getPlayer1();
         if (postFigure == null)
             throw new IllegalArgumentException("Sent request with incorrect body. " +
                     "Try - {\"side\":\"X\"}");
 
-        Game game = gameControl.newGame(postFigure, player);
+        Game game = gameControl.newGame(postFigure, player, null);
         game.setTurn(gameControl.currentFigure(game.getField()));
         dao.create(game);
         return game;
