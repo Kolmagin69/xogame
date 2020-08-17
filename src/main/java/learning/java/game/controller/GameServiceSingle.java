@@ -1,6 +1,7 @@
 package learning.java.game.controller;
 
 import learning.java.game.dao.GamesDao;
+import learning.java.game.dao.PlayersDao;
 import learning.java.game.exception.NotFoundExceptions;
 import learning.java.game.model.Figure;
 import learning.java.game.model.Game;
@@ -9,18 +10,23 @@ import learning.java.game.model.Point;
 import learning.java.game.rest.request.CreateGameRequest;
 import learning.java.game.rest.request.TurnGameRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-@Service
+@Component("gameServiceSingleBean")
 public class GameServiceSingle implements GameService {
 
     @Autowired
+    @Qualifier("gameControllerSingleBean")
     private GameController gameControl;
 
     @Autowired
     private GamesDao dao;
+
+    @Autowired
+    private PlayersDao playersDao;
 
     @Override
     public Game getGameFromId(String id) {
@@ -34,11 +40,11 @@ public class GameServiceSingle implements GameService {
 
     @Override
     public Game postNewGame(CreateGameRequest createGameRequest) {
-        Figure postFigure = createGameRequest.getSide();
-        Player player = createGameRequest.getPlayer1();
-        if (postFigure == null)
+        Figure postFigure = createGameRequest.getSidePlayer1();
+        Player player = playersDao.read(createGameRequest.getPlayerId1());
+        if (postFigure == null || player == null)
             throw new IllegalArgumentException("Sent request with incorrect body. " +
-                    "Try - {\"side\":\"X\"}");
+                    "With incorrect key, try \"sidePlayer1:\", \"playerId1:\"");
 
         Game game = gameControl.newGame(postFigure, player, null);
         game.setTurn(gameControl.currentFigure(game.getField()));
