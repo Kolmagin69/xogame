@@ -7,9 +7,12 @@ import org.springframework.stereotype.Component;
 
 import java.sql.*;
 import java.util.UUID;
+import java.util.logging.Logger;
 
 @Component
 public class GamesDao implements Dao<Game, UUID> {
+
+    public static final Logger logger = Logger.getLogger(GamesDao.class.getName());
 
     @Autowired
     private DataConnection dataConnection;
@@ -178,6 +181,7 @@ public class GamesDao implements Dao<Game, UUID> {
                 PreparedStatement statement = connection.prepareStatement(sql.QUERY)) {
             result = statementTFunction.apply(connection, statement);
         } catch (SQLException e) {
+
             e.printStackTrace();
         }
         return result;
