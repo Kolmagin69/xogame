@@ -15,7 +15,6 @@ public class DataConnection  {
 
     public static final Logger logger = Logger.getLogger(DataConnection.class.getName());
 
-
     private String user;
 
     private String password;
