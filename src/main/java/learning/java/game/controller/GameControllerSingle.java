@@ -34,7 +34,7 @@ public class GameControllerSingle implements GameController {
     public PlayerFigure getAIPlayer(final Figure playersFigure){
         return new PlayerFigure(){{
             setPlayer( new Player("AI"){{
-               setId(null);
+                setId(null);
             }});
             setFigure(oppositeFig(playersFigure));
         }};
@@ -42,17 +42,22 @@ public class GameControllerSingle implements GameController {
 
     public void letsPlay(Game game, Point point) {
         Field field = game.getField();
+        checkAndSetWinner(game);
         if (game.getPlayer1().getFigure() == Figure.X) {
             applyFigure(field, point);
             randomMove(field);
         } else {
-            randomMove(field);
-            applyFigure(field, point);
+            Point randomMove = randomMove(field);
+            try {
+                applyFigure(field, point);
+            } catch (IllegalArgumentException e){
+                field.setFigure(randomMove, null);
+            }
         }
         checkAndSetWinner(game);
     }
 
-    private void randomMove(final Field field) {
+    private Point randomMove(final Field field) {
         Random random = new Random();
         Figure figure = currentFigure(field);
         int size = field.getSize();
@@ -63,6 +68,7 @@ public class GameControllerSingle implements GameController {
         } catch (IllegalArgumentException e) {
             randomMove(field);
         }
+        return point;
     }
 
     private void applyFigure(final Field field, final Point point) {
