@@ -2,7 +2,7 @@ package learning.java.game;
 
 import learning.java.game.controller.GameControllerSingle;
 import learning.java.game.dao.Dao;
-import learning.java.game.dao.GamesDao;
+import learning.java.game.dao.*;
 import learning.java.game.dao.PlayersDao;
 import learning.java.game.model.Figure;
 import learning.java.game.model.Game;
