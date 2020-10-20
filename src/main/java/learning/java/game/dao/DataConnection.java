@@ -8,12 +8,9 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @Component
 public class DataConnection  {
-
-    public static final Logger logger = Logger.getLogger(DataConnection.class.getName());
 
     private String user;
 
@@ -35,10 +32,8 @@ public class DataConnection  {
         try {
             connection =  DriverManager.getConnection(url, user, password);
         } catch (SQLException e) {
-            logger.log(Level.WARNING,"problem with connection", SQLException.class);
             e.printStackTrace();
         }
-        logger.info("connect to DB. Client " + user);
         return connection;
     }
 }
