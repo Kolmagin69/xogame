@@ -2,6 +2,8 @@ package learning.java.game.dao;
 
 import learning.java.game.controller.GameControllerSingle;
 import learning.java.game.model.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,31 +13,37 @@ import java.util.UUID;
 @Component
 public class GamesDao implements Dao<Game, UUID> {
 
+    public static final Logger logger = LoggerFactory.getLogger(GamesDao.class);
+
     @Autowired
     private DataConnection dataConnection;
 
     @Override
     public UUID create(Game game) {
-        UUID id = UUID.randomUUID();
+        final UUID id = UUID.randomUUID();
         game.setId(id);
-            return   execute(SQLGames.INSERT, (connection, statement) -> {
-                statement.setObject(1, id);
-                statement.setString(2, game.getType());
-                statement.setString(3, game.getName());
-                statement.setString(4, game.getTurn().toString());
-                if (game.getWinner() == null)
-                    statement.setString(5, null);
-                else
-                    statement.setString(5, game.getWinner().toString());
-                statement.setInt(6, createFields(game.getField()));
-                ResultSet resultSet = statement.executeQuery();
-                resultSet.next();
-                createPlayersFigure(game.getPlayer1(), id);
-                PlayerFigure playerFigure = game.getPlayer2();
-                if (playerFigure.getPlayer().getId() != null)
-                    createPlayersFigure(playerFigure, id);
-                return UUID.fromString(resultSet.getString("id"));
-            });
+        final UUID result =  execute(SQLGames.INSERT, (connection, statement) -> {
+            statement.setObject(1, id);
+            statement.setString(2, game.getType());
+            statement.setString(3, game.getName());
+            statement.setString(4, game.getTurn().toString());
+            if (game.getWinner() == null)
+                statement.setString(5, null);
+            else
+                statement.setString(5, game.getWinner().toString());
+            statement.setInt(6, createFields(game.getField()));
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            createPlayersFigure(game.getPlayer1(), id);
+            PlayerFigure playerFigure = game.getPlayer2();
+            if (playerFigure.getPlayer().getId() != null)
+                createPlayersFigure(playerFigure, id);
+            return UUID.fromString(resultSet.getString("id"));
+        });
+        if(result == null)
+            logger.warn("Tried to create a new game, but executeQuery() return NULL.");
+        logger.info("Created new game with id: " + result);
+        return result;
     }
 
     private int createPlayersFigure(PlayerFigure player, UUID gameId) {
@@ -63,26 +71,28 @@ public class GamesDao implements Dao<Game, UUID> {
     @Override
     public Game read(UUID uuid) {
         GameControllerSingle controllerSingle = new GameControllerSingle();
-            return  execute(SQLGames.SELECT, (connection, statement) -> {
-                statement.setObject(1, uuid);
-                ResultSet resultSet = statement.executeQuery();
-                Game game = new Game();
-                while (resultSet.next()) {
-                    game.setId((UUID) resultSet.getObject("game_id"));
-                    game.setName(resultSet.getString("name"));
-                    game.setType(resultSet.getString("type"));
-                    game.setTurn(Figure.figureFromString(resultSet.getString("turn")));
-                    game.setWinner(Figure.figureFromString(resultSet.getString("winner")));
-                    game.setField(readFields(resultSet.getInt("field_id")));
-                    if (game.getPlayer1() == null) {
-                        game.setPlayer1(readPlayerFigures(resultSet, connection));
-                        game.setPlayer2(controllerSingle.getAIPlayer(game.getPlayer1().getFigure()));
-                    } else {
-                        game.setPlayer2(readPlayerFigures(resultSet, connection));
-                    }
+        Game result = execute(SQLGames.SELECT, (connection, statement) -> {
+            statement.setObject(1, uuid);
+            ResultSet resultSet = statement.executeQuery();
+            Game game = new Game();
+            while (resultSet.next()) {
+                game.setId((UUID) resultSet.getObject("game_id"));
+                game.setName(resultSet.getString("name"));
+                game.setType(resultSet.getString("type"));
+                game.setTurn(Figure.figureFromString(resultSet.getString("turn")));
+                game.setWinner(Figure.figureFromString(resultSet.getString("winner")));
+                game.setField(readFields(resultSet.getInt("field_id")));
+                if (game.getPlayer1() == null) {
+                    game.setPlayer1(readPlayerFigures(resultSet, connection));
+                    game.setPlayer2(controllerSingle.getAIPlayer(game.getPlayer1().getFigure()));
+                } else {
+                    game.setPlayer2(readPlayerFigures(resultSet, connection));
                 }
-                return game;
-            });
+            }
+            return game;
+        });
+        logger.info("Read game data with id " + result.getId());
+        return result;
     }
 
     private PlayerFigure readPlayerFigures(ResultSet resultSet, Connection connection) {
@@ -127,16 +137,18 @@ public class GamesDao implements Dao<Game, UUID> {
     @Override
     public UUID update(Game game) {
         final UUID id = game.getId();
-            return  execute(SQLGames.UPDATE, (connection, statement) -> {
-                statement.setString(1, game.getTurn().toString());
-                Figure winner = game.getWinner();
-                statement.setString(2, winner == null ? null : winner.toString());
-                statement.setObject(3, game.getId());
-                ResultSet resultSet = statement.executeQuery();
-                resultSet.next();
-                updateField(game);
-                return UUID.fromString(resultSet.getString("id"));
-            });
+        final UUID result =  execute(SQLGames.UPDATE, (connection, statement) -> {
+            statement.setString(1, game.getTurn().toString());
+            Figure winner = game.getWinner();
+            statement.setString(2, winner == null ? null : winner.toString());
+            statement.setObject(3, game.getId());
+            ResultSet resultSet = statement.executeQuery();
+            resultSet.next();
+            updateField(game);
+            return UUID.fromString(resultSet.getString("id"));
+        });
+        logger.info("Updated games data with id: " + result);
+        return result;
     }
 
     private int updateField(Game game) {
@@ -154,10 +166,11 @@ public class GamesDao implements Dao<Game, UUID> {
     public boolean delete(Game game) {
         UUID id = game.getId();
         return execute(SQLGames.DELETE, (connection, statement) -> {
-                statement.setObject(1, id);
-                deletePlayerFigure(id);
-                return statement.executeQuery().next();
-            });
+            statement.setObject(1, id);
+            deletePlayerFigure(id);
+            logger.info("Deleting game with id: " + id);
+            return statement.executeQuery().next();
+        });
     }
 
     private boolean deletePlayerFigure(UUID id){
@@ -168,14 +181,14 @@ public class GamesDao implements Dao<Game, UUID> {
     }
 
     private Connection getConnection(){
-       return dataConnection.get();
+        return dataConnection.get();
     }
 
     private <R> R execute(SQLGames sql,
                           SQLBiFunction<Connection, PreparedStatement, R> statementTFunction) {
         R result = null;
         try (Connection connection = getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql.QUERY)) {
+             PreparedStatement statement = connection.prepareStatement(sql.QUERY)) {
             result = statementTFunction.apply(connection, statement);
         } catch (SQLException e) {
             e.printStackTrace();

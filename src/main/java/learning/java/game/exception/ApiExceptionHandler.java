@@ -1,6 +1,8 @@
 package learning.java.game.exception;
 
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -12,11 +14,13 @@ import java.time.ZonedDateTime;
 @ControllerAdvice
 public class ApiExceptionHandler {
 
+    public static final Logger logger = LoggerFactory.getLogger(ApiExceptionHandler.class);
+
     private final String generalMessage = "Sorry. Some kind of error occurred. " +
             "Read the message, maybe it will help";
 
     @ExceptionHandler(value = {IllegalArgumentException.class, IndexOutOfBoundsException.class,
-            IncorrectBodyException.class})
+            IncorrectBodyException.class, IncorrectUUIDException.class})
     public ResponseEntity<Object> handleIllegalArgumentAndIndexOutOfBoundsException(Exception ex){
 
         HttpStatus badRequest = HttpStatus.BAD_REQUEST;
@@ -25,7 +29,7 @@ public class ApiExceptionHandler {
                 generalMessage, ex.getMessage(),
                 badRequest,
                 ZonedDateTime.now(ZoneId.of("UTC+3")));
-
+        logger.info(ex.getMessage());
         return new ResponseEntity<>(apiErrorMessage, badRequest);
     }
 
@@ -40,6 +44,7 @@ public class ApiExceptionHandler {
                 badRequest,
                 ZonedDateTime.now(ZoneId.of("UTC+3")));
 
+        logger.info(ex.getMessage());
         return new ResponseEntity<>(apiErrorMessage, badRequest);
     }
 
@@ -52,7 +57,7 @@ public class ApiExceptionHandler {
                 generalMessage, ex.getMessage(),
                 badRequest,
                 ZonedDateTime.now(ZoneId.of("UTC+3")));
-
+        logger.info(ex.getMessage());
         return new ResponseEntity<>(apiErrorMessage, badRequest);
     }
 }
