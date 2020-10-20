@@ -1,7 +1,6 @@
 package learning.java.game.controller;
 
-import learning.java.game.dao.GamesDao;
-import learning.java.game.dao.PlayersDao;
+import learning.java.game.dao.*;
 import learning.java.game.exception.NotFoundExceptions;
 import learning.java.game.model.Figure;
 import learning.java.game.model.Game;
@@ -30,7 +29,7 @@ public class GameServiceSingle implements GameService {
 
     @Override
     public Game getGameFromId(String id) {
-        UUID key = UUID.fromString(id);
+        UUID key = gameControl.uuidFromString(id);
         Game game = dao.read(key);
         if(game == null || game.getId() == null)
             throw new NotFoundExceptions("Not found game with this id: " + key);
@@ -61,13 +60,16 @@ public class GameServiceSingle implements GameService {
         if (id == null)
             throw new IllegalArgumentException("Sent request to incorrect address." +
                     " Try - game/{UUID}/turn");
-        Game gameXO = dao.read(UUID.fromString(id));
+        Game gameXO = dao.read(gameControl.uuidFromString(id));
         if (gameXO == null || gameXO.getId() == null)
             throw new NotFoundExceptions("Game with id: \"" + id + "\" Not found");
 
         Point point = new Point(turnGameRequest.getX(), turnGameRequest.getY());
+        try {
         gameControl.letsPlay(gameXO, point);
-        dao.update(gameXO);
+        } finally {
+            dao.update(gameXO);
+        }
         return gameXO;
     }
 
