@@ -1,8 +1,10 @@
 package learning.java.game.controller;
 
 import learning.java.game.exception.GameOverException;
+import learning.java.game.exception.IncorrectUUIDException;
 import learning.java.game.model.*;
 
+import java.util.UUID;
 import java.util.function.BiFunction;
 
 public interface GameController {
@@ -64,6 +66,16 @@ public interface GameController {
                 return Figure.O;
         }
         return null;
+    }
+
+    default UUID uuidFromString(String uuid) throws IncorrectUUIDException {
+        UUID key = null;
+        try {
+            key = UUID.fromString(uuid);
+        } catch (Exception e) {
+            throw new IncorrectUUIDException("Invalid UUID value: "+ uuid);
+        }
+        return key;
     }
 
 }
