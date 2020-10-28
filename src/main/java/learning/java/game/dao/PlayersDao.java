@@ -30,7 +30,7 @@ public class PlayersDao implements Dao<Player, UUID> {
 
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            logger.info(String.format("Creating new player (name - %s, id - %s", name, id));
+            logger.info(String.format("Creating new player (name - %s, id - %s)", name, id));
             return UUID.fromString(resultSet.getString("id"));
         });
     }
@@ -47,7 +47,7 @@ public class PlayersDao implements Dao<Player, UUID> {
             }
             return player;
         });
-        logger.info(String.format("Reading details of the player (name - %s, id - %s", result.getName(), result.getName()));
+        logger.info(String.format("Reading details of the player (name - %s, id - %s)", result.getName(), result.getId()));
         return result;
     }
 
@@ -60,7 +60,7 @@ public class PlayersDao implements Dao<Player, UUID> {
             statement.setString(1, name);
             ResultSet resultSet = statement.executeQuery();
             resultSet.next();
-            logger.info(String.format("Updating details of the player (name - %s, id - %s", name, id));
+            logger.info(String.format("Updating details of the player (name - %s, id - %s)", name, id));
             return (UUID) resultSet.getObject("id");
         });
     }
