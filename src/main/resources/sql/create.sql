@@ -1,8 +1,3 @@
-CREATE USER xogame WITH PASSWORD '123321';
-CREATE DATABASE xogame;
-GRANT ALL PRIVILEGES ON DATABASE xogame TO xogame;
-
-
 CREATE TABLE fields(
 	id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
 	size int NOT NULL,
@@ -11,7 +6,7 @@ CREATE TABLE fields(
 
 CREATE TABLE players (
 	id uuid PRIMARY KEY,
-	name varchar(255),
+	name varchar(255)
 );
 
 CREATE TABLE games (
@@ -21,7 +16,7 @@ CREATE TABLE games (
 	turn varchar(1) NOT NULL,
 	winner varchar(1),
 	field_id int NOT NULL,
-	FOREIGN KEY (field_id) REFERENCES fields(id) ON DELETE CASCADE,
+	FOREIGN KEY (field_id) REFERENCES fields(id) ON DELETE CASCADE
 );
 
 CREATE TABLE player_figures (
