@@ -1,0 +1,23 @@
+version: '3.8'
+services:
+  database:
+    image: postgres:12
+    container_name: xogamedb
+    ports:
+    - 5400:5432
+    volumes:
+    - ./xo_pg_data:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRESS_PASSWORD: pas45
+      POSTGRES_DB: xogame
+      POSTGRES_HOST_AUTH_METHOD: trust
+      PGDATA: /var/lib/postgresql/data/pgdata
+    restart: always
+  application:
+    build: .
+    container_name: xogameapp
+    ports:
+    - 8080:8080
+    restart: always
+    links:
+      - database
