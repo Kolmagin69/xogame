@@ -2,6 +2,7 @@ package learning.java.game.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -10,6 +11,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 
 @Component
+@PropertySource("classpath:database.properties")
 public class DataConnection  {
 
     private String user;
