@@ -11,7 +11,7 @@
         <file>./logging/OAuthApplicationLog.log</file>
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>OAuthApplicationLog.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <fileNamePattern>./logging/OAuthApplicationLog.%d{yyyy-MM-dd}.log</fileNamePattern>
             <maxHistory>10</maxHistory>
             <totalSizeCap>1GB</totalSizeCap>
         </rollingPolicy>
